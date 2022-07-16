@@ -4,6 +4,18 @@
 
 @layer base {
   body {
-    font-family: "DM Sans", sans-serif;
+    @apply bg-slate-900 font-body px-5;
+  }
+}
+
+@layer components {
+  .page-container {
+    max-width: 1280px;
+    @apply mx-auto;
+  }
+
+  .movie-list .swiper-slide {
+    width: 300px;
+    height: auto;
   }
 }
