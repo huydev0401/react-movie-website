@@ -1,14 +1,11 @@
 import React from "react";
 import useSWR from "swr";
-import { fetcher } from "../../config";
+import { TMDB_API, fetcher } from "../../config";
 import BannerItem from "./BannerItem";
 import { SwiperSlide, Swiper } from "swiper/react";
 
 const Banner = () => {
-  const { data } = useSWR(
-    `https://api.themoviedb.org/3/movie/upcoming?api_key=2fcb8a94f56d2bd408dda09d36e46ce7`,
-    fetcher
-  );
+  const { data } = useSWR(TMDB_API.getMovieList("upcoming"), fetcher);
   if (!data) return null;
   const { results } = data;
   if (!results || results.length < 0) return null;
@@ -17,8 +14,8 @@ const Banner = () => {
       <Swiper grabCursor={"true"} slidesPerView={"auto"}>
         {results.length > 0 &&
           results.map((item) => (
-            <SwiperSlide>
-              <BannerItem key={item.id} item={item}></BannerItem>
+            <SwiperSlide key={item.id}>
+              <BannerItem item={item}></BannerItem>
             </SwiperSlide>
           ))}
       </Swiper>

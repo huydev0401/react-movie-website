@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "../button/Button";
 
 const MovieCard = ({ item }) => {
+  const navigate = useNavigate();
   if (!item) return null;
-  const { title, vote_average, release_date, poster_path } = item;
+  const { title, vote_average, release_date, poster_path, id } = item;
   return (
     <div className="flex flex-col movie-card p-3 bg-slate-800 w-full rounded-lg text-white h-full select-none">
       <img
@@ -33,9 +36,9 @@ const MovieCard = ({ item }) => {
             </svg>
           </span>
         </div>
-        <button className="py-3 px-6 capitalize rounded-lg bg-primary text-white font-medium w-full mt-auto">
+        <Button full onClick={() => navigate(`/movies/${id}`)}>
           Watch now
-        </button>
+        </Button>
       </div>
     </div>
   );

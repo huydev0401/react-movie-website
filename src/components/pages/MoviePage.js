@@ -1,21 +1,50 @@
-import React from "react";
-import { fetcher } from "../../config";
+import React, { useEffect, useState } from "react";
+import { TMDB_API, fetcher } from "../../config";
 import useSWR from "swr";
 import MovieCard from "../movie/MovieCard";
+import useDebounce from "../../hooks/useDebounce";
+import ReactPaginate from "react-paginate";
+
+const itemsPerPage = 20;
 
 const MoviePage = () => {
-  const { data } = useSWR(
-    `https://api.themoviedb.org/3/movie/top_rated?api_key=2fcb8a94f56d2bd408dda09d36e46ce7`,
-    fetcher
-  );
-  if (!data) return null;
-  const { results } = data;
-  if (!results || results.length < 0) return null;
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [nextPage, setNextPage] = useState(1);
+  const [query, setQuery] = useState("");
+  const queryDebounce = useDebounce(query, 1000);
+  const [url, setUrl] = useState(TMDB_API.getMovieList("top_rated", nextPage));
+  useEffect(() => {
+    if (queryDebounce) {
+      setUrl(TMDB_API.getMovieSearch(queryDebounce, nextPage));
+    } else {
+      setUrl(TMDB_API.getMovieList("top_rated", nextPage));
+    }
+  }, [queryDebounce, nextPage]);
+  const handleChangeSearch = (e) => {
+    setQuery(e.target.value);
+  };
+  const { data, error } = useSWR(url, fetcher);
+  const loading = !data && !error;
+
+  const movies = data?.results || [];
+  useEffect(() => {
+    if (!data || !data.total_results) return;
+    setPageCount(Math.ceil(data.total_results / itemsPerPage));
+  }, [data, itemOffset]);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % data.total_results;
+    setItemOffset(newOffset);
+    setNextPage(event.selected + 1);
+  };
+
   return (
     <div className="p-10 page-container">
       <div className="flex items-center mb-10 w-[800px] mx-auto">
         <div className="flex-1">
           <input
+            value={query}
+            onChange={handleChangeSearch}
             className="p-4 w-full bg-slate-800 rounded-tl-lg rounded-bl-lg outline-none text-white"
             type="text"
             placeholder="Type to search..."
@@ -28,7 +57,7 @@ const MoviePage = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            stroke-width="2"
+            strokeWidth="2"
           >
             <path
               strokeLinecap="round"
@@ -38,11 +67,27 @@ const MoviePage = () => {
           </svg>
         </button>
       </div>
+      {loading && (
+        <div className="mx-auto w-10 h-10 rounded-full border-4 border-primary border-t-4 border-t-transparent animate-spin"></div>
+      )}
       <div className="grid grid-cols-4 gap-6">
-        {results.length > 0 &&
-          results.map((item) => (
+        {!loading &&
+          movies.length > 0 &&
+          movies.map((item) => (
             <MovieCard key={item.id} item={item}></MovieCard>
           ))}
+      </div>
+      <div className="mt-10">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          className="pagination"
+        />
       </div>
     </div>
   );

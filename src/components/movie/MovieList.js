@@ -1,17 +1,11 @@
 import React from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import useSWR from "swr";
-import { fetcher } from "../../config";
+import { TMDB_API, fetcher } from "../../config";
 import MovieCard from "./MovieCard";
 
-// https://api.themoviedb.org/3/movie/now_playing?api_key=2fcb8a94f56d2bd408dda09d36e46ce7
-// https://image.tmdb.org/t/p/w500/bvYjhsbxOBwpm8xLE5BhdA3a8CZ.jpg
-
 const MovieList = ({ type = "now_playing" }) => {
-  const { data } = useSWR(
-    `https://api.themoviedb.org/3/movie/${type}?api_key=2fcb8a94f56d2bd408dda09d36e46ce7`,
-    fetcher
-  );
+  const { data } = useSWR(TMDB_API.getMovieList(type), fetcher);
   if (!data) return null;
   const { results } = data;
   if (!results || results.length < 0) return null;

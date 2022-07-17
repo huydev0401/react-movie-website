@@ -1,13 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "../button/Button";
+import { TMDB_API } from "../../config";
 
 const BannerItem = ({ item }) => {
+  const navigate = useNavigate();
   if (!item) return null;
-  const { title, poster_path } = item;
+  const { title, poster_path, id } = item;
   return (
     <div className="relative w-full h-full rounded-lg">
       <div className="overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0.4)] rounded-lg"></div>
       <img
-        src={`https://image.tmdb.org/t/p/w780/${poster_path}`}
+        src={TMDB_API.getImages(poster_path, "w780")}
         alt=""
         className="w-full h-full object-cover rounded-lg object-top"
       />
@@ -24,9 +28,7 @@ const BannerItem = ({ item }) => {
             Drama
           </span>
         </div>
-        <button className="py-3 px-6 capitalize rounded-lg bg-primary text-white font-medium">
-          Watch now
-        </button>
+        <Button onClick={() => navigate(`/movies/${id}`)}>Watch now</Button>
       </div>
     </div>
   );
