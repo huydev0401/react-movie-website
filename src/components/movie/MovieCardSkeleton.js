@@ -1,28 +1,32 @@
+import LoadingSkeleton from "components/loading/loadingSkeleton";
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "../button/Button";
-import PropTypes from "prop-types";
-import { withErrorBoundary } from "react-error-boundary";
 
-const MovieCard = ({ item }) => {
-  const navigate = useNavigate();
-  if (!item) return null;
-  const { title, vote_average, release_date, poster_path, id } = item;
+const MovieCardSkeleton = () => {
   return (
     <div className="flex flex-col movie-card p-3 bg-slate-800 w-full rounded-lg text-white h-full select-none">
-      <img
-        src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-        alt=""
-        className="w-full h-[250px] object-cover rounded-lg mb-5"
-      />
+      <LoadingSkeleton
+        height="250px"
+        radius="8px"
+        className="mb-5"
+      ></LoadingSkeleton>
       <div className="flex flex-col flex-1">
-        <h3 className="font-bold text-lg mb-3">{title}</h3>
+        <LoadingSkeleton
+          height="20px"
+          radius="4px"
+          className="mb-3"
+        ></LoadingSkeleton>
         <div className="flex items-center justify-between mb-10">
-          <span className="text-sm opacity-50">
-            {new Date(release_date).getFullYear()}
-          </span>
+          <LoadingSkeleton
+            width="20px"
+            height="20px"
+            radius="4px"
+          ></LoadingSkeleton>
           <span className="flex items-center gap-x-1">
-            <span className="text-sm opacity-50">{vote_average}</span>
+            <LoadingSkeleton
+              width="20px"
+              height="20px"
+              radius="4px"
+            ></LoadingSkeleton>
             <svg
               width="16"
               height="15"
@@ -38,32 +42,10 @@ const MovieCard = ({ item }) => {
             </svg>
           </span>
         </div>
-        <Button full onClick={() => navigate(`/movies/${id}`)}>
-          Watch now
-        </Button>
+        <LoadingSkeleton height="40px" radius="8px"></LoadingSkeleton>
       </div>
     </div>
   );
 };
 
-MovieCard.propTypes = {
-  item: PropTypes.shape({
-    title: PropTypes.string,
-    vote_average: PropTypes.number,
-    release_date: PropTypes.string,
-    poster_path: PropTypes.string,
-    id: PropTypes.number,
-  }),
-};
-
-function FallbackComponent() {
-  return (
-    <p className="bg-red-50 text-red-500">
-      Something went wrong with this component
-    </p>
-  );
-}
-
-export default withErrorBoundary(MovieCard, {
-  FallbackComponent,
-});
+export default MovieCardSkeleton;

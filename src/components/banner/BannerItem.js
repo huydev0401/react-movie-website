@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import { TMDB_API } from "../../config";
+import PropTypes from "prop-types";
 
 const BannerItem = ({ item }) => {
   const navigate = useNavigate();
@@ -32,6 +33,14 @@ const BannerItem = ({ item }) => {
       </div>
     </div>
   );
+};
+
+BannerItem.propTypes = {
+  item: PropTypes.shape({
+    title: PropTypes.string,
+    poster_path: PropTypes.string,
+    id: PropTypes.number,
+  }),
 };
 
 export default BannerItem;
