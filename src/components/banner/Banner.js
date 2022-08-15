@@ -9,6 +9,7 @@ const Banner = () => {
   const { data, error } = useSWR(TMDB_API.getMovieList("upcoming"), fetcher);
   const loading = !data && !error;
   const results = data?.results || [];
+  console.log(results);
   return (
     <section className="banner h-[600px] page-container mb-20">
       {loading && <BannerSkeleton></BannerSkeleton>}

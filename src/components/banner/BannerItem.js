@@ -16,9 +16,9 @@ const BannerItem = ({ item }) => {
         alt=""
         className="w-full h-full object-cover rounded-lg object-top"
       />
-      <div className="absolute left-5 bottom-5 w-full text-white">
-        <h2 className="font-bold text-5xl mb-8">{title}</h2>
-        <div className="flex items-center gap-x-3 mb-8">
+      <div className="absolute left-5 bottom-1/3  w-full text-white">
+        <h2 className="font-bold text-6xl mb-10">{title}</h2>
+        {/* <div className="flex items-center gap-x-3 mb-8">
           <span className="py-2 px-4 border border-white rounded-md">
             Action
           </span>
@@ -28,7 +28,7 @@ const BannerItem = ({ item }) => {
           <span className="py-2 px-4 border border-white rounded-md">
             Drama
           </span>
-        </div>
+        </div> */}
         <Button onClick={() => navigate(`/movies/${id}`)}>Watch now</Button>
       </div>
     </div>
